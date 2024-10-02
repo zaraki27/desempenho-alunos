@@ -4,12 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desempenho dos Alunos</title>
+    <!-- Link para o Bootstrap para layout responsivo -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Link para o estilo CSS personalizado -->
     <link rel="stylesheet" href="style.css">
+    <!-- Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- PapaParse para leitura de arquivos CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 </head>
 <body>
-    <h1>Gráficos de Desempenho dos Alunos</h1>
-    <canvas id="graficoDesempenho"></canvas>
+
+    <div class="container">
+        <h1 class="mt-5 text-center">Gráficos de Desempenho dos Alunos</h1>
+
+        <!-- Seção de upload de arquivo CSV -->
+        <div class="form-group mt-5 text-center">
+            <label for="csvFileInput">Envie um arquivo CSV com notas e frequência:</label>
+            <input type="file" class="form-control-file" id="csvFileInput">
+        </div>
+
+        <!-- Gráficos -->
+        <div class="mt-4">
+            <canvas id="graficoNotas"></canvas>
+        </div>
+
+        <div class="mt-4">
+            <canvas id="graficoFrequencia"></canvas>
+        </div>
+    </div>
+
+    <!-- Link para o script JavaScript personalizado -->
     <script src="script.js"></script>
 </body>
 </html>
