@@ -1,34 +1,79 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desempenho dos Alunos</title>
-    <!-- Link para o Bootstrap para layout responsivo -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Link para o estilo CSS personalizado -->
-    <link rel="stylesheet" href="style.css">
-    <!-- Chart.js para gráficos -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- PapaParse para leitura de arquivos CSV -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-</head>
-<body>
+// URL do arquivo CSV no GitHub
+const url = 'https://raw.githubusercontent.com/zaraki27/desempenho-alunos/main/desempenho_alunos.csv'; 
 
-    <div class="container">
-        <h1 class="mt-5 text-center">Gráficos de Desempenho dos Alunos</h1>
+fetch(url)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao carregar o CSV: ' + response.statusText);
+        }
+        return response.text();
+    })
+    .then(data => {
+        const parsedData = Papa.parse(data, { header: true });
+        const alunos = [];
+        const notas = [];
+        const frequencias = [];
 
-        <!-- Gráficos -->
-        <div class="mt-4">
-            <canvas id="graficoNotas"></canvas>
-        </div>
+        // Iterar sobre os dados do CSV
+        parsedData.data.forEach(row => {
+            alunos.push(row.Aluno);
+            notas.push(parseFloat(row["Média 1º Trimestre"]) || 0); // Média do 1º Trimestre
+            frequencias.push(parseFloat(row["Faltas 1º Trimestre"]) || 0); // Faltas do 1º Trimestre
+        });
 
-        <div class="mt-4">
-            <canvas id="graficoFrequencia"></canvas>
-        </div>
-    </div>
+        // Chamar as funções para gerar os gráficos
+        gerarGraficoNotas(alunos, notas);
+        gerarGraficoFrequencia(alunos, frequencias);
+    })
+    .catch(error => console.error('Erro ao carregar o arquivo CSV:', error));
 
-    <!-- Link para o script JavaScript personalizado -->
-    <script src="script.js"></script>
-</body>
-</html>
+// Função para gerar gráfico de notas
+function gerarGraficoNotas(alunos, notas) {
+    const ctx = document.getElementById('graficoNotas').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: alunos,
+            datasets: [{
+                label: 'Notas do 1º Trimestre',
+                data: notas,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+// Função para gerar gráfico de frequência
+function gerarGraficoFrequencia(alunos, frequencias) {
+    const ctx = document.getElementById('graficoFrequencia').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: alunos,
+            datasets: [{
+                label: 'Faltas do 1º Trimestre',
+                data: frequencias,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: false,
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
