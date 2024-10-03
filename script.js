@@ -1,4 +1,4 @@
-// Use o link raw do seu arquivo CSV no GitHub
+// URL do arquivo CSV no GitHub
 const url = 'https://raw.githubusercontent.com/zaraki27/desempenho-alunos/main/desempenho_alunos.csv'; 
 
 fetch(url)
